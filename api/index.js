@@ -5,6 +5,7 @@ import authRoute from "./routes/auth.js";
 import usersRoute from "./routes/users.js";
 import hotelsRoute from "./routes/hotels.js";
 import roomsRoute from "./routes/rooms.js";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 const app = express();
@@ -18,7 +19,7 @@ const connect = async () => {
   }
 };
 mongoose.connection.on("connected", () => {
-  console.log("MongoDB Connect!!!");
+  console.log("MongoDB Conectado!!!");
 });
 mongoose.connection.on("disconnected", () => {
   console.log("MongoDB Desconectado!!!");
@@ -26,6 +27,7 @@ mongoose.connection.on("disconnected", () => {
 
 //middlewares
 
+app.use(cookieParser());
 app.use(express.json());
 
 app.use("/api/auth", authRoute);
@@ -35,8 +37,8 @@ app.use("/api/rooms", roomsRoute);
 
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;
-  const errorMessage = err.message || "servidor no disponible";
-  return res.status(500).json({
+  const errorMessage = err.message || "Servidor no disponible";
+  return res.status(errorStatus).json({
     message: errorMessage,
     status: errorStatus,
     success: false,
@@ -46,7 +48,7 @@ app.use((err, req, res, next) => {
 
 app.listen(8800, () => {
   connect();
-  console.log("Connect al backend!!!jjj");
+  console.log("Conectado al backend!!!jjj");
 });
 
 app.get("/reservas", (req, res) => {
